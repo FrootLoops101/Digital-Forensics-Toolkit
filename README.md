@@ -2,7 +2,7 @@
 
 A comprehensive digital forensics toolkit designed for law enforcement, cybersecurity professionals, and digital investigators. This toolkit provides secure evidence management, chain of custody tracking, forensic analysis capabilities, and compliance with international forensic standards.
 
-## 🚨 Security & Compliance Features
+##  Security & Compliance Features
 
 - **Chain of Custody Tracking**: Complete audit trail for all evidence handling
 - **Forensic Integrity Verification**: Multi-algorithm hashing and integrity checks
@@ -361,5 +361,6 @@ npm run db:restore
 ## ⚠️ Disclaimer
 
 This toolkit is designed for legitimate forensic investigations and cybersecurity purposes only. Users are responsible for ensuring compliance with applicable laws and regulations in their jurisdiction. The author is not responsible for misuse of this software.
+
 
 
