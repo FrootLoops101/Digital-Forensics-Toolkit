@@ -1,0 +1,177 @@
+{
+  "nist": {
+    "sp800-86": {
+      "version": "1.0",
+      "title": "Guide to Integrating Forensic Techniques into Incident Response",
+      "compliance": {
+        "evidenceCollection": {
+          "required": true,
+          "standards": [
+            "Document all collection activities",
+            "Use write-blocking hardware/software",
+            "Maintain chain of custody",
+            "Calculate cryptographic hashes",
+            "Document system state before collection"
+          ]
+        },
+        "evidencePreservation": {
+          "required": true,
+          "standards": [
+            "Store evidence in secure, controlled environment",
+            "Maintain environmental controls",
+            "Implement access controls",
+            "Regular integrity verification",
+            "Backup and redundancy"
+          ]
+        },
+        "evidenceAnalysis": {
+          "required": true,
+          "standards": [
+            "Use validated tools and procedures",
+            "Document all analysis steps",
+            "Maintain analysis environment integrity",
+            "Preserve original evidence",
+            "Generate analysis reports"
+          ]
+        },
+        "reporting": {
+          "required": true,
+          "standards": [
+            "Comprehensive documentation",
+            "Clear and concise language",
+            "Include methodology",
+            "Document findings and conclusions",
+            "Maintain professional standards"
+          ]
+        }
+      }
+    }
+  },
+  "iso": {
+    "27037": {
+      "version": "2012",
+      "title": "Information technology — Security techniques — Guidelines for identification, collection, acquisition and preservation of digital evidence",
+      "compliance": {
+        "identification": {
+          "required": true,
+          "standards": [
+            "Identify potential sources of digital evidence",
+            "Assess relevance and reliability",
+            "Document identification process",
+            "Consider legal requirements"
+          ]
+        },
+        "collection": {
+          "required": true,
+          "standards": [
+            "Use appropriate collection methods",
+            "Minimize evidence alteration",
+            "Document collection process",
+            "Maintain evidence integrity"
+          ]
+        },
+        "acquisition": {
+          "required": true,
+          "standards": [
+            "Use forensically sound methods",
+            "Document acquisition process",
+            "Verify acquisition integrity",
+            "Maintain chain of custody"
+          ]
+        },
+        "preservation": {
+          "required": true,
+          "standards": [
+            "Implement preservation procedures",
+            "Maintain evidence integrity",
+            "Document preservation activities",
+            "Regular integrity verification"
+          ]
+        }
+      }
+    }
+  },
+  "chainOfCustody": {
+    "requirements": {
+      "documentation": {
+        "required": true,
+        "elements": [
+          "Evidence identification",
+          "Collection details",
+          "Custody transfers",
+          "Storage locations",
+          "Access records",
+          "Integrity verification"
+        ]
+      },
+      "digitalSignatures": {
+        "required": true,
+        "standards": [
+          "Use cryptographic signatures",
+          "Timestamp all signatures",
+          "Verify signature authenticity",
+          "Maintain signature integrity"
+        ]
+      },
+      "auditTrail": {
+        "required": true,
+        "elements": [
+          "All access attempts",
+          "Modification records",
+          "Transfer documentation",
+          "Integrity checks",
+          "System events"
+        ]
+      }
+    }
+  },
+  "evidenceIntegrity": {
+    "hashVerification": {
+      "required": true,
+      "algorithms": ["md5", "sha1", "sha256"],
+      "frequency": "Before and after any operation",
+      "documentation": "All hash values must be recorded"
+    },
+    "writeProtection": {
+      "required": true,
+      "methods": [
+        "Hardware write blockers",
+        "Software write protection",
+        "Read-only media",
+        "Access controls"
+      ]
+    },
+    "environmentalControls": {
+      "required": true,
+      "controls": [
+        "Temperature monitoring",
+        "Humidity control",
+        "Access restrictions",
+        "Surveillance systems"
+      ]
+    }
+  },
+  "reportingStandards": {
+    "format": {
+      "required": true,
+      "sections": [
+        "Executive summary",
+        "Investigation methodology",
+        "Evidence collected",
+        "Analysis results",
+        "Findings and conclusions",
+        "Recommendations"
+      ]
+    },
+    "documentation": {
+      "required": true,
+      "requirements": [
+        "Clear and objective language",
+        "Comprehensive methodology",
+        "Supporting evidence",
+        "Expert qualifications",
+        "Compliance statements"
+      ]
+    }
+  }
+}

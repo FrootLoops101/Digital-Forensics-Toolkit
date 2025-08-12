@@ -1,0 +1,118 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost",
+    "showErrors": false,
+    "maxFileSize": "50mb",
+    "timeout": 300000
+  },
+  "security": {
+    "allowedOrigins": ["http://localhost:3000", "http://localhost:3001"],
+    "jwtSecret": "your-super-secret-jwt-key-change-in-production",
+    "jwtExpiration": "24h",
+    "bcryptRounds": 12,
+    "rateLimitWindow": 900000,
+    "rateLimitMax": 100
+  },
+  "database": {
+    "type": "sqlite",
+    "path": "./data/forensics.db",
+    "backupPath": "./backups/",
+    "maxConnections": 10,
+    "idleTimeout": 30000
+  },
+  "forensics": {
+    "evidenceStorage": "./evidence/",
+    "workingDirectory": "./working/",
+    "tempDirectory": "./temp/",
+    "hashAlgorithms": ["md5", "sha1", "sha256"],
+    "imageFormats": ["dd", "e01", "aff", "raw"],
+    "maxImageSize": "2TB",
+    "integrityCheckInterval": 3600000
+  },
+  "acquisition": {
+    "diskImaging": {
+      "enabled": true,
+      "maxConcurrent": 2,
+      "bufferSize": "64MB",
+      "compressionLevel": 6
+    },
+    "memoryCapture": {
+      "enabled": true,
+      "maxSize": "32GB",
+      "compression": true
+    },
+    "networkCapture": {
+      "enabled": true,
+      "maxFileSize": "1GB",
+      "rotationInterval": 3600000
+    }
+  },
+  "analysis": {
+    "fileCarving": {
+      "enabled": true,
+      "maxFileSize": "100MB",
+      "supportedFormats": ["jpg", "png", "pdf", "doc", "xls", "zip", "rar"]
+    },
+    "keywordSearch": {
+      "enabled": true,
+      "maxResults": 10000,
+      "caseSensitive": false,
+      "regexSupport": true
+    },
+    "timelineAnalysis": {
+      "enabled": true,
+      "maxEvents": 100000,
+      "timezone": "UTC"
+    }
+  },
+  "reporting": {
+    "formats": ["pdf", "html", "xml", "json"],
+    "templates": "./templates/",
+    "outputDirectory": "./reports/",
+    "autoGenerate": true,
+    "includeCharts": true
+  },
+  "logging": {
+    "level": "info",
+    "file": "./logs/forensics.log",
+    "maxSize": "100MB",
+    "maxFiles": 10,
+    "format": "json"
+  },
+  "compliance": {
+    "nist": {
+      "enabled": true,
+      "version": "800-86",
+      "strictMode": true
+    },
+    "iso": {
+      "enabled": true,
+      "standard": "27037",
+      "compliance": true
+    },
+    "chainOfCustody": {
+      "enabled": true,
+      "digitalSignatures": true,
+      "auditTrail": true,
+      "retentionPeriod": "10y"
+    }
+  },
+  "externalTools": {
+    "autopsy": {
+      "enabled": false,
+      "path": "/usr/local/bin/autopsy",
+      "version": "4.19.0"
+    },
+    "volatility": {
+      "enabled": false,
+      "path": "/usr/local/bin/vol.py",
+      "version": "2.6.1"
+    },
+    "tsk": {
+      "enabled": false,
+      "path": "/usr/local/bin/",
+      "version": "4.12.0"
+    }
+  }
+}

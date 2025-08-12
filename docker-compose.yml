@@ -1,0 +1,285 @@
+version: '3.8'
+
+services:
+  # Main application
+  forensics-toolkit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: forensics-toolkit
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_PATH=/app/data/forensics.db
+      - UPLOAD_PATH=/app/uploads
+      - LOG_FILE_PATH=/app/logs/forensics.log
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-here}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-your-32-character-encryption-key}
+      - SESSION_SECRET=${SESSION_SECRET:-your-session-secret-key}
+      - DATABASE_BACKUP_ENABLED=true
+      - DATABASE_BACKUP_FREQUENCY=24
+      - DATABASE_BACKUP_RETENTION=30
+      - LOG_LEVEL=info
+      - MAX_FILE_SIZE=100MB
+      - ALLOWED_FILE_TYPES=image/*,application/pdf,text/*,application/zip
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+    volumes:
+      - forensics_data:/app/data
+      - forensics_uploads:/app/uploads
+      - forensics_logs:/app/logs
+      - forensics_temp:/app/temp
+    networks:
+      - forensics_network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis for session storage and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: forensics-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis-password}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis-password}
+    volumes:
+      - redis_data:/data
+    networks:
+      - forensics_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: forensics-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - forensics_network
+    depends_on:
+      - forensics-toolkit
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Database backup service
+  backup:
+    image: alpine:latest
+    container_name: forensics-backup
+    restart: "no"
+    command: |
+      sh -c "
+        apk add --no-cache sqlite3 tar gzip
+        mkdir -p /backup
+        sqlite3 /data/forensics.db '.backup /backup/forensics-$(date +%Y%m%d-%H%M%S).db'
+        tar -czf /backup/forensics-$(date +%Y%m%d-%H%M%S).tar.gz /backup/*.db
+        echo 'Backup completed: $(date)'
+      "
+    volumes:
+      - forensics_data:/data
+      - backup_data:/backup
+    networks:
+      - forensics_network
+    depends_on:
+      - forensics-toolkit
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Monitoring service (optional)
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: forensics-monitoring
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - monitoring_data:/prometheus
+    networks:
+      - forensics_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Named volumes for data persistence
+volumes:
+  forensics_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+  forensics_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./uploads
+  forensics_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs
+  forensics_temp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./temp
+  redis_data:
+    driver: local
+  backup_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./backups
+  nginx_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./nginx/logs
+  monitoring_data:
+    driver: local
+
+# Custom network for service communication
+networks:
+  forensics_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: forensics_br0
+    enable_ipv6: false
+    internal: false
+    attachable: false
+    labels:
+      - "forensics.network=true"
+      - "forensics.environment=production"

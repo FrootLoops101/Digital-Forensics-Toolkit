@@ -1,0 +1,203 @@
+{
+  "name": "digital-forensics-toolkit",
+  "version": "1.0.0",
+  "description": "A comprehensive digital forensics toolkit with security, compliance, and chain of custody tracking",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:security": "jest tests/unit/security-manager.test.js",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx}\" \"tests/**/*.{js,jsx}\"",
+    "security:audit": "npm audit",
+    "security:fix": "npm audit fix",
+    "db:init": "node scripts/init-database.js",
+    "db:backup": "node scripts/backup-database.js",
+    "db:restore": "node scripts/restore-database.js",
+    "build": "npm run lint && npm run test",
+    "precommit": "npm run lint && npm run test:unit",
+    "docs:generate": "jsdoc -c jsdoc.json",
+    "docs:serve": "jsdoc -c jsdoc.json --serve",
+    "docker:build": "docker build -t forensics-toolkit .",
+    "docker:run": "docker run -p 3000:3000 forensics-toolkit",
+    "docker:compose": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down"
+  },
+  "keywords": [
+    "digital-forensics",
+    "cybersecurity",
+    "evidence-management",
+    "chain-of-custody",
+    "forensic-analysis",
+    "security",
+    "compliance",
+    "NIST",
+    "ISO-27037"
+  ],
+  "author": "Digital Forensics Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "fs-extra": "^11.1.1",
+    "crypto": "^1.0.1",
+    "path": "^0.12.7",
+    "uuid": "^9.0.1",
+    "moment": "^2.29.4",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "compression": "^1.7.4",
+    "express-slow-down": "^2.0.0",
+
+    "redis": "^4.6.10",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "pdf-lib": "^1.17.1",
+    "exceljs": "^4.4.0",
+    "sharp": "^0.32.6",
+    "ffmpeg-static": "^5.2.0",
+    "tesseract.js": "^4.1.1",
+
+    "xss": "^1.0.14",
+
+    "rate-limiter-flexible": "^2.4.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "hpp": "^0.2.3",
+    "express-http-proxy": "^1.6.3",
+    "swagger-ui-express": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.2",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.6.3",
+    "eslint-plugin-node": "^11.1.0",
+    "prettier": "^3.1.0",
+    "jsdoc": "^4.0.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "@faker-js/faker": "^8.4.1",
+    "mock-fs": "^5.2.0",
+    "sinon": "^17.0.1",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+
+    "rimraf": "^5.0.5",
+    "copyfiles": "^2.4.1",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0",
+    "start-server-and-test": "^2.0.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/digital-forensics-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/digital-forensics-toolkit/issues"
+  },
+  "homepage": "https://github.com/your-org/digital-forensics-toolkit#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js",
+      "!src/**/*.spec.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/tests/**/*.spec.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/coverage/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "verbose": true,
+    "testTimeout": 10000
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "plugin:node/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "error",
+      "prefer-const": "error",
+      "no-var": "error",
+      "eqeqeq": "error",
+      "curly": "error",
+      "no-eval": "error",
+      "no-implied-eval": "error",
+      "no-new-func": "error",
+      "no-script-url": "error",
+      "security/detect-object-injection": "warn",
+      "security/detect-non-literal-regexp": "warn"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

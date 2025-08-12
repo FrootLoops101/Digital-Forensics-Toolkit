@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Forensics Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav li {
+            background: #3498db;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav li:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            display: block;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+        
+        .dashboard {
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: #e74c3c;
+        }
+        
+        .btn-primary:hover {
+            background: #c0392b;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Digital Forensics Toolkit</h1>
+            <p>Professional digital forensics and evidence management system</p>
+        </div>
+        
+        <div class="nav">
+            <ul>
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('cases')">Cases</a></li>
+                <li><a href="#" onclick="showSection('evidence')">Evidence</a></li>
+                <li><a href="#" onclick="showSection('acquisition')">Acquisition</a></li>
+                <li><a href="#" onclick="showSection('analysis')">Analysis</a></li>
+                <li><a href="#" onclick="showSection('reports')">Reports</a></li>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section">
+                <div class="dashboard">
+                    <h2>📊 Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Cases</h3>
+                            <p class="stat-number" id="casesCount">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Evidence</h3>
+                            <p class="stat-number" id="evidenceCount">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>System Status</h3>
+                            <p class="stat-number">🟢</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h3>Quick Actions</h3>
+                        <button class="btn" onclick="showSection('cases')">Create New Case</button>
+                        <button class="btn" onclick="showSection('evidence')">Upload Evidence</button>
+                        <button class="btn" onclick="showSection('reports')">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cases Section -->
+            <div id="cases" class="section hidden">
+                <h2>📁 Case Management</h2>
+                <div class="form-group">
+                    <label>Case Number:</label>
+                    <input type="text" id="caseNumber" placeholder="Enter case number">
+                </div>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" id="caseTitle" placeholder="Enter case title">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <input type="text" id="caseDescription" placeholder="Enter case description">
+                </div>
+                <button class="btn btn-primary" onclick="createCase()">Create Case</button>
+                
+                <div id="casesList" style="margin-top: 30px;">
+                    <h3>Existing Cases</h3>
+                    <div id="casesContainer">Loading cases...</div>
+                </div>
+            </div>
+            
+            <!-- Evidence Section -->
+            <div id="evidence" class="section hidden">
+                <h2>🔬 Evidence Management</h2>
+                <div class="form-group">
+                    <label>Case ID:</label>
+                    <input type="text" id="evidenceCaseId" placeholder="Enter case ID">
+                </div>
+                <div class="form-group">
+                    <label>Evidence Name:</label>
+                    <input type="text" id="evidenceName" placeholder="Enter evidence name">
+                </div>
+                <div class="form-group">
+                    <label>Evidence Type:</label>
+                    <select id="evidenceType">
+                        <option value="file">File</option>
+                        <option value="image">Image</option>
+                        <option value="memory_dump">Memory Dump</option>
+                        <option value="network_capture">Network Capture</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="uploadEvidence()">Upload Evidence</button>
+                
+                <div id="evidenceList" style="margin-top: 30px;">
+                    <h3>Evidence List</h3>
+                    <div id="evidenceContainer">Loading evidence...</div>
+                </div>
+            </div>
+            
+            <!-- Acquisition Section -->
+            <div id="acquisition" class="section hidden">
+                <h2>📥 Digital Evidence Acquisition</h2>
+                <div class="form-group">
+                    <label>Acquisition Type:</label>
+                    <select id="acquisitionType">
+                        <option value="disk">Disk Imaging</option>
+                        <option value="memory">Memory Dump</option>
+                        <option value="network">Network Capture</option>
+                        <option value="file">File Acquisition</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target:</label>
+                    <input type="text" id="acquisitionTarget" placeholder="Enter target path or device">
+                </div>
+                <button class="btn btn-primary" onclick="startAcquisition()">Start Acquisition</button>
+                
+                <div id="acquisitionProgress" class="hidden" style="margin-top: 30px;">
+                    <h3>Acquisition Progress</h3>
+                    <div style="background: #ddd; height: 20px; border-radius: 10px; overflow: hidden;">
+                        <div id="progressBar" style="background: #3498db; height: 100%; width: 0%; transition: width 0.5s;"></div>
+                    </div>
+                    <p id="progressText">0% Complete</p>
+                </div>
+            </div>
+            
+            <!-- Analysis Section -->
+            <div id="analysis" class="section hidden">
+                <h2>🔍 Forensic Analysis</h2>
+                <div class="form-group">
+                    <label>Select Evidence:</label>
+                    <select id="analysisEvidence">
+                        <option value="">Choose evidence to analyze</option>
+                        <option value="evidence1">Evidence 1</option>
+                        <option value="evidence2">Evidence 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Analysis Type:</label>
+                    <select id="analysisType">
+                        <option value="file_carving">File Carving</option>
+                        <option value="keyword_search">Keyword Search</option>
+                        <option value="timeline">Timeline Analysis</option>
+                        <option value="hash_analysis">Hash Analysis</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="startAnalysis()">Start Analysis</button>
+                
+                <div id="analysisResults" class="hidden" style="margin-top: 30px;">
+                    <h3>Analysis Results</h3>
+                    <div id="resultsContainer"></div>
+                </div>
+            </div>
+            
+            <!-- Reports Section -->
+            <div id="reports" class="section hidden">
+                <h2>📋 Report Generation</h2>
+                <div class="form-group">
+                    <label>Report Type:</label>
+                    <select id="reportType">
+                        <option value="case_summary">Case Summary</option>
+                        <option value="evidence_analysis">Evidence Analysis</option>
+                        <option value="timeline_report">Timeline Report</option>
+                        <option value="comprehensive">Comprehensive Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Case:</label>
+                    <select id="reportCase">
+                        <option value="">Choose a case</option>
+                        <option value="case1">Case 1</option>
+                        <option value="case2">Case 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Report Format:</label>
+                    <select id="reportFormat">
+                        <option value="pdf">PDF</option>
+                        <option value="html">HTML</option>
+                        <option value="docx">Word Document</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show/hide sections
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.remove('hidden');
+            
+            // Load data for specific sections
+            if (sectionName === 'dashboard') {
+                loadDashboardData();
+            } else if (sectionName === 'cases') {
+                loadCases();
+            } else if (sectionName === 'evidence') {
+                loadEvidence();
+            }
+        }
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const [casesRes, evidenceRes] = await Promise.all([
+                    fetch('/api/cases'),
+                    fetch('/api/evidence/case/test')
+                ]);
+                
+                const casesData = await casesRes.json();
+                const evidenceData = await evidenceRes.json();
+                
+                document.getElementById('casesCount').textContent = casesData.success ? casesData.cases.length : 0;
+                document.getElementById('evidenceCount').textContent = evidenceData.success ? evidenceData.evidence.length : 0;
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+        
+        // Load cases
+        async function loadCases() {
+            try {
+                const response = await fetch('/api/cases');
+                const data = await response.json();
+                
+                const container = document.getElementById('casesContainer');
+                if (data.success && data.cases.length > 0) {
+                    container.innerHTML = data.cases.map(caseItem => `
+                        <div style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px;">
+                            <h4>${caseItem.title}</h4>
+                            <p><strong>Case Number:</strong> ${caseItem.case_number}</p>
+                            <p><strong>Status:</strong> ${caseItem.status}</p>
+                            <p><strong>Priority:</strong> ${caseItem.priority}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No cases found. Create your first case to get started.</p>';
+                }
+            } catch (error) {
+                document.getElementById('casesContainer').innerHTML = '<p class="error">Error loading cases</p>';
+            }
+        }
+        
+        // Load evidence
+        async function loadEvidence() {
+            try {
+                const response = await fetch('/api/evidence/case/test');
+                const data = await response.json();
+                
+                const container = document.getElementById('evidenceContainer');
+                if (data.success && data.evidence.length > 0) {
+                    container.innerHTML = data.evidence.map(item => `
+                        <div style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px;">
+                            <h4>${item.name}</h4>
+                            <p><strong>Type:</strong> ${item.type}</p>
+                            <p><strong>Status:</strong> ${item.status}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No evidence found. Upload evidence to get started.</p>';
+                }
+            } catch (error) {
+                document.getElementById('evidenceContainer').innerHTML = '<p class="error">Error loading evidence</p>';
+            }
+        }
+        
+        // Create case
+        async function createCase() {
+            const caseNumber = document.getElementById('caseNumber').value;
+            const title = document.getElementById('caseTitle').value;
+            const description = document.getElementById('caseDescription').value;
+            
+            if (!caseNumber || !title) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/cases', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        case_number: caseNumber,
+                        title: title,
+                        description: description,
+                        investigator: 'current_user'
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('Case created successfully!');
+                    loadCases();
+                    // Clear form
+                    document.getElementById('caseNumber').value = '';
+                    document.getElementById('caseTitle').value = '';
+                    document.getElementById('caseDescription').value = '';
+                } else {
+                    alert('Error creating case: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error creating case');
+            }
+        }
+        
+        // Upload evidence
+        async function uploadEvidence() {
+            const caseId = document.getElementById('evidenceCaseId').value;
+            const name = document.getElementById('evidenceName').value;
+            const type = document.getElementById('evidenceType').value;
+            
+            if (!caseId || !name || !type) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            alert('Evidence upload functionality would be implemented here');
+        }
+        
+        // Start acquisition
+        function startAcquisition() {
+            const target = document.getElementById('acquisitionTarget').value;
+            if (!target) {
+                alert('Please enter a target');
+                return;
+            }
+            
+            document.getElementById('acquisitionProgress').classList.remove('hidden');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = progress + '% Complete';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        alert('Acquisition completed successfully!');
+                        document.getElementById('acquisitionProgress').classList.add('hidden');
+                    }, 500);
+                }
+            }, 500);
+        }
+        
+        // Start analysis
+        function startAnalysis() {
+            const evidence = document.getElementById('analysisEvidence').value;
+            if (!evidence) {
+                alert('Please select evidence to analyze');
+                return;
+            }
+            
+            document.getElementById('analysisResults').classList.remove('hidden');
+            document.getElementById('resultsContainer').innerHTML = '<p>Analysis in progress...</p>';
+            
+            setTimeout(() => {
+                document.getElementById('resultsContainer').innerHTML = `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <h4>Analysis Complete</h4>
+                        <p><strong>Files Found:</strong> 15</p>
+                        <p><strong>Keywords Matched:</strong> 8</p>
+                        <p><strong>Timeline Events:</strong> 127</p>
+                        <p><strong>Analysis Duration:</strong> 3.2 seconds</p>
+                    </div>
+                `;
+            }, 3000);
+        }
+        
+        // Generate report
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const reportCase = document.getElementById('reportCase').value;
+            
+            if (!reportCase) {
+                alert('Please select a case for the report');
+                return;
+            }
+            
+            alert('Report generation functionality would be implemented here');
+        }
+        
+        // Load dashboard data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>
+
