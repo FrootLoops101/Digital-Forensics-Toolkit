@@ -69,7 +69,7 @@ digital-forensics-toolkit/
 
 The application will be available at `http://localhost:3000`
 
-## 🔧 Configuration
+##  Configuration
 
 ### Environment Variables
 
@@ -271,7 +271,7 @@ services:
     restart: unless-stopped
 ```
 
-## 📋 Development
+##  Development
 
 ### Code Quality
 
@@ -302,7 +302,7 @@ npm run db:backup
 npm run db:restore
 ```
 
-## 🔍 Forensic Standards Compliance
+##  Forensic Standards Compliance
 
 ### NIST Guidelines
 
@@ -324,7 +324,7 @@ npm run db:restore
 - **Digital Signatures**: Cryptographic signatures for custody transfers
 - **Audit Logging**: Comprehensive logging of all operations
 
-## 🚨 Incident Response
+##  Incident Response
 
 ### Evidence Collection
 
@@ -348,7 +348,7 @@ npm run db:restore
 - **Compliance Verification**: Standards compliance checklist
 
 
-## 🔄 Changelog
+##  Changelog
 
 ### Version 1.0.0
 
@@ -358,9 +358,10 @@ npm run db:restore
 - Comprehensive testing suite
 - Docker deployment support
 
-## ⚠️ Disclaimer
+## ⚠ Disclaimer
 
 This toolkit is designed for legitimate forensic investigations and cybersecurity purposes only. Users are responsible for ensuring compliance with applicable laws and regulations in their jurisdiction. The author is not responsible for misuse of this software.
+
 
 
 
