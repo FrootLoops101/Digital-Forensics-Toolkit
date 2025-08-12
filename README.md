@@ -358,9 +358,10 @@ npm run db:restore
 - Comprehensive testing suite
 - Docker deployment support
 
-## ⚠ Disclaimer
+##  Disclaimer
 
 This toolkit is designed for legitimate forensic investigations and cybersecurity purposes only. Users are responsible for ensuring compliance with applicable laws and regulations in their jurisdiction. The author is not responsible for misuse of this software.
+
 
 
 
